@@ -107,9 +107,7 @@ verify_ddns(){
     fi
 }
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-apt update && apt install -y docker-ce jq
+apt update && apt install -y docker.io jq
 enable_bbr
 mkdir /root/ssr-config
 wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/ddns-config.json
