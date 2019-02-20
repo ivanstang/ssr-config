@@ -3,6 +3,6 @@
 	"target": "127.0.0.1:8443",
 	"fec": "10:6",
 	"timeout": 3,
-	"key": "ivans.udpspeeder",
+	"key": "password",
 	"log": "/var/log/udpspeeder.log"
 }

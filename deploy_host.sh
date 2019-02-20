@@ -61,7 +61,7 @@ enable_bbr(){
 # 读取ddns配置
 read_ddns_config(){
     DDNS_CONF=/root/ssr-config/ddns-config.json
-    if [ ! -f $DDNS_CONF ]; then
+    if [ ! -f ${DDNS_CONF} ]; then
         cat > ${DDNS_CONF}<<-EOF
 {
 "host": "xxxx",
@@ -69,8 +69,8 @@ read_ddns_config(){
 }
 EOF
     fi
-    HOST=`cat $DDNS_CONF | jq '.host' | sed 's/\"//g'`
-    KEY=`cat $DDNS_CONF | jq '.key' | sed 's/\"//g'`
+    HOST=`cat ${DDNS_CONF} | jq '.host' | sed 's/\"//g'`
+    KEY=`cat ${DDNS_CONF} | jq '.key' | sed 's/\"//g'`
 }
 
 # 修改DDNS主机名
@@ -107,6 +107,60 @@ verify_ddns(){
     fi
 }
 
+# 读取json配置文件中的密码
+read_json_password(){
+    if [ ! -f ${CONF_FILE}]; then
+        echo "找不到配置文件 ${CONF_FILE}, 退出！"
+        exit 1
+    fi
+    PASSWORD=`cat ${CONF_FILE} | jq '.password' | sed 's/\"//g'`
+}
+
+# 读取conf配置文件中的密码
+read_conf_password(){
+    if [ ! -f ${CONF_FILE}]; then
+        echo "找不到配置文件 ${CONF_FILE}, 退出！"
+        exit 1
+    fi
+    PASSWORD=`cat ${CONF_FILE} | grep '-k' | awk '{print $2}'
+}
+
+# 配置SSR连接密码
+config_password(){
+    CONF_FILE="/root/ssr-config/shadowsocksr-config"
+    read_json_password
+    echo -e "请输入SSR的连接密码"
+    read -e -p "(当前的密码是: ${PASSWORD}):" NEW_PASSWORD
+    if [ ! -z "${NEW_PASSWORD}" ]; then
+        sed -i "s/${PASSWORD}/${NEW_PASSWORD}/g" "${CONF_FILE}"
+        read_json_password
+        [[ "${PASSWORD}" != "${NEW_PASSWORD}" ]] && echo -e "${Error} SSR连接密码修改失败 !" && exit 1
+        echo -e "${Info} SSR连接密码已修改为 ${NEW_PASSWORD} !"
+    fi
+
+    CONF_FILE="/root/ssr-config/udpspeeder-config.json"
+    read_json_password
+    echo -e "请输入UDPSpeeder的连接密码"
+    read -e -p "(当前的密码是: ${PASSWORD}):" NEW_PASSWORD
+    if [ ! -z "${NEW_PASSWORD}" ]; then
+        sed -i "s/${PASSWORD}/${NEW_PASSWORD}/g" "${CONF_FILE}"
+        read_json_password
+        [[ "${PASSWORD}" != "${NEW_PASSWORD}" ]] && echo -e "${Error} UDPSpeeder连接密码修改失败 !" && exit 1
+        echo -e "${Info} UDPSpeeder连接密码已修改为 ${NEW_PASSWORD} !"
+    fi
+
+    CONF_FILE="/root/ssr-config/udp2raw.conf"
+    read_conf_password
+    echo -e "请输入UDPSpeeder的连接密码"
+    read -e -p "(当前的密码是: ${PASSWORD}):" NEW_PASSWORD
+    if [ ! -z "${NEW_PASSWORD}" ]; then
+        sed -i "s/${PASSWORD}/${NEW_PASSWORD}/g" "${CONF_FILE}"
+        read_conf_password
+        [[ "${PASSWORD}" != "${NEW_PASSWORD}" ]] && echo -e "${Error} UDPSpeeder连接密码修改失败 !" && exit 1
+        echo -e "${Info} UDPSpeeder连接密码已修改为 ${NEW_PASSWORD} !"
+    fi
+}
+
 apt update && apt install -y docker.io jq
 enable_bbr
 mkdir /root/ssr-config
@@ -116,6 +170,7 @@ wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/iv
 wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/udpspeeder-config.json
 change_ddns_host
 verify_ddns
+config_password
 docker rm -f ssr
 docker rm -f ubuntu
 docker rmi -f ivanstang/ssr:with-udp-speedup
