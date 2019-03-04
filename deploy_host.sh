@@ -109,7 +109,7 @@ verify_ddns(){
 
 # 读取json配置文件中的密码
 read_json_password(){
-    if [ ! -f ${CONF_FILE}]; then
+    if [ ! -f ${CONF_FILE} ]; then
         echo "找不到配置文件 ${CONF_FILE}, 退出！"
         exit 1
     fi
@@ -118,7 +118,7 @@ read_json_password(){
 
 # 读取conf配置文件中的密码
 read_conf_password(){
-    if [ ! -f ${CONF_FILE}]; then
+    if [ ! -f ${CONF_FILE} ]; then
         echo "找不到配置文件 ${CONF_FILE}, 退出！"
         exit 1
     fi
@@ -165,19 +165,19 @@ apt update && apt install -y docker.io jq
 enable_bbr
 mkdir /root/ssr-config
 Download_File="/root/ssr-config/ddns-config.json"
-if [ ! -f ${Download_File}]; then
+if [ ! -f ${Download_File} ]; then
 	wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/ddns-config.json
 fi
 Download_File="/root/ssr-config/shadowsocksr-config.json"
-if [ ! -f ${Download_File}]; then
+if [ ! -f ${Download_File} ]; then
 	wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/shadowsocksr-config.json
 fi
 Download_File="/root/ssr-config/udp2raw.conf"
-if [ ! -f ${Download_File}]; then
+if [ ! -f ${Download_File} ]; then
 	wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/udp2raw.conf
 fi
 Download_File="/root/ssr-config/udpspeeder-config.json"
-if [ ! -f ${Download_File}]; then
+if [ ! -f ${Download_File} ]; then
 	wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/udpspeeder-config.json
 fi
 change_ddns_host
