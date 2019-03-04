@@ -164,10 +164,22 @@ config_password(){
 apt update && apt install -y docker.io jq
 enable_bbr
 mkdir /root/ssr-config
-wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/ddns-config.json
-wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/shadowsocksr-config.json
-wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/udp2raw.conf
-wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/udpspeeder-config.json
+Download_File="/root/ssr-config/ddns-config.json"
+if [ ! -f ${Download_File}]; then
+	wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/ddns-config.json
+fi
+Download_File="/root/ssr-config/shadowsocksr-config.json"
+if [ ! -f ${Download_File}]; then
+	wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/shadowsocksr-config.json
+fi
+Download_File="/root/ssr-config/udp2raw.conf"
+if [ ! -f ${Download_File}]; then
+	wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/udp2raw.conf
+fi
+Download_File="/root/ssr-config/udpspeeder-config.json"
+if [ ! -f ${Download_File}]; then
+	wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/udpspeeder-config.json
+fi
 change_ddns_host
 verify_ddns
 config_password
