@@ -1,8 +1,9 @@
 #!/bin/bash
 
-if [ -f "deploy_host.sh"]; then
-	rm "deploy_host.sh"
+FILE="/root/deploy_host.sh"
+if [ -f ${FILE} ]; then
+	rm ${FILE}
 fi
 
-wget https://raw.githubusercontent.com/ivanstang/ssr-config/master/deploy_host.sh
-bash deploy_host.sh
+wget -N --directory-prefix=/root https://raw.githubusercontent.com/ivanstang/ssr-config/master/deploy_host.sh
+bash ${FILE}

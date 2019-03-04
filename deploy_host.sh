@@ -131,7 +131,7 @@ read_conf_password(){
         echo "找不到配置文件 ${CONF_FILE}, 退出！"
         exit 1
     fi
-    PASSWORD=`cat ${CONF_FILE} | grep '-k' | awk '{print $2}'`
+    PASSWORD=`cat ${CONF_FILE} | grep '\-k' | awk '{print $2}'`
 }
 
 # 配置SSR连接密码
