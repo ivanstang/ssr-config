@@ -160,13 +160,13 @@ config_password(){
 
     CONF_FILE="/root/ssr-config/udp2raw.conf"
     read_conf_password
-    echo -e "请输入UDPSpeeder的连接密码"
+    echo -e "请输入UDP2Raw的连接密码"
     read -e -p "(当前的密码是: ${PASSWORD}):" NEW_PASSWORD
     if [ ! -z "${NEW_PASSWORD}" ]; then
         sed -i "s/${PASSWORD}/${NEW_PASSWORD}/g" "${CONF_FILE}"
         read_conf_password
-        [[ "${PASSWORD}" != "${NEW_PASSWORD}" ]] && echo -e "${Error} UDPSpeeder连接密码修改失败 !" && exit 1
-        echo -e "${Info} UDPSpeeder连接密码已修改为 ${NEW_PASSWORD} !"
+        [[ "${PASSWORD}" != "${NEW_PASSWORD}" ]] && echo -e "${Error} UDP2Raw连接密码修改失败 !" && exit 1
+        echo -e "${Info} UDP2Raw连接密码已修改为 ${NEW_PASSWORD} !"
     fi
 }
 
