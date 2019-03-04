@@ -107,13 +107,22 @@ verify_ddns(){
     fi
 }
 
-# 读取json配置文件中的密码
+# 读取json配置文件中的password的值
 read_json_password(){
     if [ ! -f ${CONF_FILE} ]; then
         echo "找不到配置文件 ${CONF_FILE}, 退出！"
         exit 1
     fi
     PASSWORD=`cat ${CONF_FILE} | jq '.password' | sed 's/\"//g'`
+}
+
+# 读取json配置文件中的key的值
+read_json_key(){
+    if [ ! -f ${CONF_FILE} ]; then
+        echo "找不到配置文件 ${CONF_FILE}, 退出！"
+        exit 1
+    fi
+    PASSWORD=`cat ${CONF_FILE} | jq '.key' | sed 's/\"//g'`
 }
 
 # 读取conf配置文件中的密码
@@ -139,12 +148,12 @@ config_password(){
     fi
 
     CONF_FILE="/root/ssr-config/udpspeeder-config.json"
-    read_json_password
+    read_json_key
     echo -e "请输入UDPSpeeder的连接密码"
     read -e -p "(当前的密码是: ${PASSWORD}):" NEW_PASSWORD
     if [ ! -z "${NEW_PASSWORD}" ]; then
         sed -i "s/${PASSWORD}/${NEW_PASSWORD}/g" "${CONF_FILE}"
-        read_json_password
+        read_json_key
         [[ "${PASSWORD}" != "${NEW_PASSWORD}" ]] && echo -e "${Error} UDPSpeeder连接密码修改失败 !" && exit 1
         echo -e "${Info} UDPSpeeder连接密码已修改为 ${NEW_PASSWORD} !"
     fi
