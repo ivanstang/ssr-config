@@ -127,7 +127,7 @@ read_conf_password(){
 
 # 配置SSR连接密码
 config_password(){
-    CONF_FILE="/root/ssr-config/shadowsocksr-config"
+    CONF_FILE="/root/ssr-config/shadowsocksr-config.json"
     read_json_password
     echo -e "请输入SSR的连接密码"
     read -e -p "(当前的密码是: ${PASSWORD}):" NEW_PASSWORD
