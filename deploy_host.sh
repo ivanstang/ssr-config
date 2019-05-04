@@ -205,3 +205,4 @@ if [ -f "/etc/rc.local" ]; then
     mv /etc/rc.local /etc/rc.local.old
 fi
 wget -N --directory-prefix=/etc https://raw.githubusercontent.com/ivanstang/ssr-config/master/rc.local
+chmod 755 /etc/rc.local
