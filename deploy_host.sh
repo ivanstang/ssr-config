@@ -191,6 +191,7 @@ Download_File="/root/ssr-config/udpspeeder-config.json"
 if [ ! -f ${Download_File} ]; then
 	wget -N --directory-prefix=/root/ssr-config https://raw.githubusercontent.com/ivanstang/ssr-config/master/udpspeeder-config.json
 fi
+
 change_ddns_host
 verify_ddns
 config_password
@@ -199,3 +200,12 @@ docker rm -f ubuntu
 docker rmi -f ivanstang/ssr:with-udp-speedup
 docker run -itd -v /root/ssr-config:/ssr-config --name ssr --net host ivanstang/ssr:with-udp-speedup
 docker exec -d ssr /bin/bash -c "/etc/init.d/docker_post.sh"
+
+if [ ! -f "/etc/rc.local" ]; then
+    touch /etc/rc.local
+    chmod 755 /etc/rc.local
+    echo '#!/bin/sh -e' >> /etc/rc.local
+    echo '' >> /etc/rc.local
+fi
+echo 'docker start ssr' >> /etc/rc.local
+echo 'docker exec -d ssr /bin/bash -c "/etc/init.d/docker_post.sh"' >> /etc/rc.local
