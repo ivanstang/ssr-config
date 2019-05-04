@@ -1,0 +1,32 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+read_ddns_config(){
+    if [ -f $CONF ]; then
+        HOST=`cat $CONF | jq '.host' | sed 's/\"//g'`
+        KEY=`cat $CONF | jq '.key' | sed 's/\"//g'`
+    else
+        echo -e "${Error} 找不到 DDNS 的配置文件 !" && exit 1
+    fi
+}
+
+# 执行IP地址更新
+CONF="/root/ssr-config/ddns-config.json"
+read_ddns_config
+updateString="${HOST}:${KEY}@dyn.dns.he.net/nic/update?hostname=${HOST}"
+curl -4 ${updateString}
+
+docker start ssr
+docker exec -d ssr /bin/bash -c "/etc/init.d/docker_post.sh"
+
+exit 0

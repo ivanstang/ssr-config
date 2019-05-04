@@ -201,11 +201,7 @@ docker rmi -f ivanstang/ssr:with-udp-speedup
 docker run -itd -v /root/ssr-config:/ssr-config --name ssr --net host ivanstang/ssr:with-udp-speedup
 docker exec -d ssr /bin/bash -c "/etc/init.d/docker_post.sh"
 
-if [ ! -f "/etc/rc.local" ]; then
-    touch /etc/rc.local
-    chmod 755 /etc/rc.local
-    echo '#!/bin/sh -e' >> /etc/rc.local
-    echo '' >> /etc/rc.local
+if [ -f "/etc/rc.local" ]; then
+    mv /etc/rc.local /etc/rc.local.old
 fi
-echo 'docker start ssr' >> /etc/rc.local
-echo 'docker exec -d ssr /bin/bash -c "/etc/init.d/docker_post.sh"' >> /etc/rc.local
+wget -N --directory-prefix=/etc https://raw.githubusercontent.com/ivanstang/ssr-config/master/rc.local
